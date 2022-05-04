@@ -1,0 +1,8 @@
+##Yaml file saved for later on conversion for ROS
+##TODO: Check how parameters are loaded in ROS2.
+
+camera_factor: [1000]
+camera_cx: [325.5]
+camera_cy: [253.5]
+camera_fx: [518.0]
+camera_fy: [519.0]
