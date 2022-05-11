@@ -1,6 +1,18 @@
 #include"slam_base.h"
 
-PointCloud::Ptr slam_base::point2d_to_3d(const cv::Mat&rgb, const cv::Mat& depth){
+
+slam_base::slam_base(float scale, float fx, float fy, float cx, float cy):
+	camera.scale(scale),
+	camera.cx(cx),
+	camera.cy(cy),
+	camera.fx(fx),
+	camera.fy(fy){
+
+	return;
+}
+
+
+PointCloud::Ptr slam_base::Image2PointCloud(const cv::Mat&rgb, const cv::Mat& depth){
 
 	PointCloud::Ptr cloud ( new PointCloud );
     for (int m = 0; m < depth.rows; m++)
@@ -11,9 +23,9 @@ PointCloud::Ptr slam_base::point2d_to_3d(const cv::Mat&rgb, const cv::Mat& depth
                 continue;
             PointT p;
 
-            p.z = double(d) / slam_base::camera_factor;
-            p.x = (n - slam_base::camera_cx) * p.z / slam_base::camera_fx;
-            p.y = (m - slam_base::camera_cy) * p.z / slam_base::camera_fy;
+            p.z = double(d) / slam_base::camera.scale;
+            p.x = (n - slam_base::camera.cx) * p.z / slam_base::camera.fx;
+            p.y = (m - slam_base::camera.cy) * p.z / slam_base::camera.fy;
             
             p.b = rgb.ptr<uchar>(m)[n*3];
             p.g = rgb.ptr<uchar>(m)[n*3+1];
@@ -26,4 +38,15 @@ PointCloud::Ptr slam_base::point2d_to_3d(const cv::Mat&rgb, const cv::Mat& depth
     cloud->is_dense = false;
 
   return cloud;
+}
+
+
+cv::Point3f slam_base::point2dTo3d(const cv::Point3f& point){ //Here point.z contains the depth got from the RGBD Camera
+
+	cv::Point3f p;
+    p.z = double(point.z) / slam_base::camera.scale;
+    p.x = (point.x - slam_base::camera.cx) * p.z / slam_base::camera.fx;
+    p.y = (point.y - slam_base::camera.cy) * p.z / slam_base::camera.fy;
+
+    return p;
 }
