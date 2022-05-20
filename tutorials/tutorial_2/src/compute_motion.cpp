@@ -58,7 +58,7 @@ int main(int argc, char** argv){
 	cv::drawKeypoints(rgb1, kp1, imgShow, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
     cv::imshow("keypoints", imgShow);
     
-    cv::imwrite("./data/keypoints.png", imgShow);
+    cv::imwrite("../data/keypoints.png", imgShow);
     cv::waitKey(0);
     
     //Compute descriptors and do matching between two frames using Brute Force matching.
@@ -75,7 +75,7 @@ int main(int argc, char** argv){
  	cv::Mat imgMatches;
     cv::drawMatches( rgb1, kp1, rgb2, kp2, matches, imgMatches );
     cv::imshow( "matches", imgMatches );
-    cv::imwrite( "./data/matches.png", imgMatches );
+    cv::imwrite( "../data/matches.png", imgMatches );
     cv::waitKey( 0 );
     
     // Filter out matches based upon distance < 10*minimum distance
@@ -98,7 +98,7 @@ int main(int argc, char** argv){
 	cout<<"good matches="<<goodMatches.size()<<endl;
     cv::drawMatches( rgb1, kp1, rgb2, kp2, goodMatches, imgMatches );
     cv::imshow( "good matches", imgMatches );
-    cv::imwrite( "./data/good_matches.png", imgMatches );
+    cv::imwrite( "../data/good_matches.png", imgMatches );
     cv::waitKey(0);
 
 	vector<cv::Point3f> pts_obj; //Vector of 3d points of frame1 in (x,y,z) not (u,v,d)
@@ -151,7 +151,7 @@ int main(int argc, char** argv){
     }
     cv::drawMatches( rgb1, kp1, rgb2, kp2, matchesShow, imgMatches );
     cv::imshow( "inlier matches", imgMatches );
-    cv::imwrite( "./data/inliers.png", imgMatches );
+    cv::imwrite( "../data/inliers.png", imgMatches );
     cv::waitKey( 0 );
 /*
 */	
