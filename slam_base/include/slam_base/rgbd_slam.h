@@ -1,4 +1,3 @@
-//TODO: Studied lesson3 feature detection and solvepnp to implement and complete by today eod
 //TODO: Studied lesson3 class to reader parameters from text file and store into map implement and complete by today eod
 //TODO: Studied lesson3 different tutorials for each concept implement and complete by today eod
 //TODO: Studied lesson4 trnasform and stich point cloud implement and complete by today eod
@@ -21,10 +20,33 @@ class slam_base{
  public:
  slam_base(float scale, float fx, float fy, float cx, float cy);
  
+ // Used to convert the complete image to point cloud
  PointCloud::Ptr Image2PointCloud(const cv::Mat& rgb, const cv::Mat &depth);
 
  cv::Point3f point2dTo3d(const cv::Point3f& point);
  
+ struct FRAME{ 
+	cv::Mat rgb, depth;  //The color map and depth map corresponding to this frame  
+	cv::Mat desp;        //Feature descriptor  
+	vector<cv::KeyPoint> kp;  
+ }; 
+ 
+ struct RESULT_OF_PNP{ 
+	 cv::Mat rvec, tvec; 
+     int inliers; 
+ };
+
+ //  computeKeyPointsAndDesp extracts key points and feature descriptors at the same time  
+ void computeKeyPointsAndDesp(FRAME& frame);
+
+ //  estimateMotion calculates the motion between two frames  
+ //  Input: frame 1 and frame 2, camera  
+ RESULT_OF_PNP estimateMotion(FRAME& frame1, FRAME& frame2);
+ 
+ 
+ private:
+
+//  Frame structure 
  struct camera_params{
 	
     const double scale; 
