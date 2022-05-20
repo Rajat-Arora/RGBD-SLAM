@@ -50,3 +50,81 @@ cv::Point3f slam_base::point2dTo3d(const cv::Point3f& point){ //Here point.z con
 
     return p;
 }
+
+void slam_base::computeKeyPointsAndDesp(FRAME& frame){
+
+	cv::Ptr<cv::Feature2D> orb = cv::ORB::create();
+    orb->detect( frame.rgb, frame.kp );
+	orb->compute( farame.rgb, frame.kp, frame.desp );
+	return;
+}  
+
+RESULT_OF_PNP slam_base::estimateMotion(FRAME& frame1, FRAME& frame2){
+
+	vector<cv::DMatch> matches;
+    cv::BFMatcher matcher;
+    matcher.match(frame1.desp, frame2.desp2, matches);
+
+	cout<<"Find total "<<matches.size()<<" matches."<<endl;
+
+	//Filter out matches based upon distance < 10*minimum distance
+    vector< cv::DMatch > goodMatches;
+    double minDis = 9999;
+    for ( size_t i=0; i<matches.size(); i++ )
+    {
+        if ( matches[i].distance < minDis )
+            minDis = matches[i].distance;
+    }
+    cout<<"min dis = "<<minDis<<endl;
+
+    for ( size_t i=0; i<matches.size(); i++ )
+    {
+        if (matches[i].distance < 10*minDis)
+            goodMatches.push_back( matches[i] );
+    }
+
+    cout<<"good matches="<<goodMatches.size()<<endl;
+
+	vector<cv::Point3f> pts_obj; //Vector of 3d points of frame1 in (x,y,z) not (u,v,d)
+    vector<cv::Point2f> pts_img; //Vector of 2d points of frame2 (u,v)
+
+	 //Push filetered 2d points (u,v) of frame2 and (u,v,d) of frame1 
+     //later on converted to (x,y,z) usinng func point2dTo3d
+    for (size_t i=0; i<goodMatches.size(); i++)
+    {
+        cv::Point2f p = frame1.kp[goodMatches[i].queryIdx].pt;
+        ushort d = frame1.depth.ptr<ushort>( int(p.y) )[ int(p.x) ];
+        if (d == 0)
+            continue;
+        pts_img.push_back( cv::Point2f( frame2.kp[goodMatches[i].trainIdx].pt ) );
+
+        cv::Point3f pt ( p.x, p.y, d );
+        cv::Point3f pd = point2dTo3d( pt );
+        pts_obj.push_back( pd );
+    }
+
+	// Create Camera matrix.
+    double camera_matrix_data[3][3] = {
+        {camera.fx, 0, camera.cx},
+        {0, camera.fy, camera.cy},
+        {0, 0, 1}
+    };
+    cv::Mat cameraMatrix( 3, 3, CV_64F, camera_matrix_data );
+    cv::Mat rvec, tvec, inliers;
+
+	//Computes rvec and tvec based upon reducing the reprojection error.
+    //Computing R|t by reprojecting 3d points in prev frame to 2d points in curr frame.
+    cv::solvePnPRansac(pts_obj, pts_img, cameraMatrix, cv::Mat(), rvec, tvec, false, 100, 1.0, 0.999999999, inliers );
+
+    cout<<"inliers: "<<inliers.rows<<endl;
+    cout<<"R="<<rvec<<endl;
+    cout<<"t="<<tvec<<endl;
+
+    RESULT_OF_PNP result; 
+    result.rvec = rvec; 
+    result.tvec = tvec; 
+    result.inliers = inliers.rows; 
+   
+    return result; 
+} 
+
