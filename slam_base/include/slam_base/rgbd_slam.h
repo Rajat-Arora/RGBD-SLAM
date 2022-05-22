@@ -1,7 +1,3 @@
-//TODO: Studied lesson3 class to reader parameters from text file and store into map implement and complete by today eod
-//TODO: Studied lesson3 different tutorials for each concept implement and complete by today eod
-//TODO: Studied lesson4 trnasform and stich point cloud implement and complete by today eod
-
 #include<iostream>
 #include <string>
 using namespace std;
@@ -43,7 +39,13 @@ class slam_base{
  //  Input: frame 1 and frame 2, camera  
  RESULT_OF_PNP estimateMotion(FRAME& frame1, FRAME& frame2);
  
+ // cvMat2Eigen
+ Eigen::Isometry3d cvMat2Eigen( cv::Mat& rvec, cv::Mat& tvec);
  
+ // joinPointCloud 
+ PointCloud::Ptr joinPointCloud( PointCloud::Ptr original, FRAME& newFrame, Eigen::Isometry3d T);
+	
+
  private:
 
 //  Frame structure 
