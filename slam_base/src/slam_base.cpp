@@ -128,3 +128,42 @@ RESULT_OF_PNP slam_base::estimateMotion(FRAME& frame1, FRAME& frame2){
     return result; 
 } 
 
+Eigen::Isometry3d slam_base::cvMat2Eigen(cv::Mat& rvec, cv::Mat& tvec){
+
+	cv::Mat R;
+    cv::Rodrigues( rvec, R );
+    Eigen::Matrix3d r;
+    for ( int i=0; i<3; i++ )
+        for ( int j=0; j<3; j++ ) 
+            r(i,j) = R.at<double>(i,j);
+  
+    Eigen::Isometry3d T = Eigen::Isometry3d::Identity();
+
+    Eigen::AngleAxisd angle(r);
+    T = angle;
+    T(0,3) = tvec.at<double>(0,0); 
+    T(1,3) = tvec.at<double>(1,0); 
+    T(2,3) = tvec.at<double>(2,0);
+    return T;
+
+}
+
+PointCloud::Ptr joinPointCloud( PointCloud::Ptr original, FRAME& newFrame, Eigen::Isometry3d T){
+	
+	PointCloud::Ptr newCloud = image2PointCloud( newFrame.rgb, newFrame.depth, camera );
+
+    PointCloud::Ptr output (new PointCloud());
+    pcl::transformPointCloud( *original, *output, T.matrix() );
+    *newCloud += *output;
+
+    static pcl::VoxelGrid<PointT> voxel;
+    float gridsize = 0.01f; //1 cm change according to requirement.
+    voxel.setLeafSize(gridsize, gridsize, gridsize);
+    voxel.setInputCloud( newCloud );
+    PointCloud::Ptr tmp( new PointCloud() );
+    voxel.filter( *tmp );
+    return tmp;
+
+}
+
+
