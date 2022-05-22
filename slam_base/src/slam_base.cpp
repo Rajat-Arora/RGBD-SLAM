@@ -148,7 +148,7 @@ Eigen::Isometry3d slam_base::cvMat2Eigen(cv::Mat& rvec, cv::Mat& tvec){
 
 }
 
-PointCloud::Ptr joinPointCloud( PointCloud::Ptr original, FRAME& newFrame, Eigen::Isometry3d T){
+PointCloud::Ptr slam_base::joinPointCloud( PointCloud::Ptr original, FRAME& newFrame, Eigen::Isometry3d T){
 	
 	PointCloud::Ptr newCloud = image2PointCloud( newFrame.rgb, newFrame.depth, camera );
 
