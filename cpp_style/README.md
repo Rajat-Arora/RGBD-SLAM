@@ -38,7 +38,7 @@ The software is a standard CMake project. After cloninf the normal procedure for
    *  Run the binaries from the bin folder
   
 ## Experiments
-The experiments folder contains various experiments shown as follows:
+The [experiments](https://github.com/Rajat-Arora/RGBD-SLAM/tree/main/cpp_style/experiments) folder contains various experiments shown as follows:
 1. `reading_frame.cpp` 
   * It helps to test three classes `parameterReader`, `rgbdFrame` and `frameReader`.
   * It instantiate the object of the frameReader class and reader all the frames by calling the next method.
