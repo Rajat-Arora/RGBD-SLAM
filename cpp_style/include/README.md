@@ -25,3 +25,8 @@ feature.h : class Feature
 	keypoint, descriptor, position and observe_frequency.
 
 
+orb.h : class OrbFeature
+	Uses the feature part encapsulated from orbslam2.
+	constructor intializes the object of extractor and matcher.
+method: detectFeatures-> detects features and store in the frame struct
+method: match-> i/p: 2 frames and outputs vector<cv::DMatch> based on brute force knn matching.
