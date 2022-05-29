@@ -1,5 +1,5 @@
 add_library ( rgbd_tutor_lib 
-    rgbdframe.cpp parameter_reader.cpp 
+    rgbdframe.cpp parameter_reader.cpp orb.cpp 
 ) 
 
 target_link_libraries ( rgbd_tutor_lib 
