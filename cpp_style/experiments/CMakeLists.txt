@@ -13,3 +13,7 @@ target_link_libraries( reading_frame
     ${build_libs}
 )
 
+add_executable( match_orbfeature_tum match_orbfeature_tum.cpp )
+target_link_libraries( match_orbfeature_tum
+    ${build_libs}
+)
