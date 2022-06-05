@@ -17,3 +17,8 @@ add_executable( match_orbfeature_tum match_orbfeature_tum.cpp )
 target_link_libraries( match_orbfeature_tum
     ${build_libs}
 )
+
+add_executable( test_pnp  test_pnp.cpp )
+target_link_libraries( test_pnp
+    ${build_libs}
+)
