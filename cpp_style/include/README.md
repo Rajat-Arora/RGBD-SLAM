@@ -30,3 +30,12 @@ orb.h : class OrbFeature
 	constructor intializes the object of extractor and matcher.
 method: detectFeatures-> detects features and store in the frame struct
 method: match-> i/p: 2 frames and outputs vector<cv::DMatch> based on brute force knn matching.
+
+pnp.h : struct PNP_INFORMATION: contains relative transformation matrix T and number of Inliers and Matches
+		class PnPSolver: methods solvePnP: input 2d  curr frame and 3d points
+								 solvePnPFrame: input frame1 and frame2 and outputs the transformation matrix.
+
+convertor.h : class Convetor inherets Convertor class from g2o.
+	functions:  toSE3Quat: converts from T matrix to SE3Quat for g2o.
+				toCvCameraMatrix: changes from camera param struct to camera matrix
+				cvRT2EigenIsometry: Changes from rvec,tvec to T matrix.
