@@ -24,7 +24,7 @@ static cv::Mat toCvCameraMatrix(const rgbd_slam::CAMERA_INTRINSIC_PARAMETERS& ca
 			{camera.fx, 0, camera.cx},
             {0, camera.fy, camera.cy},
             {0, 0, 1}
-		}
+		};
 	return cv::Mat( 3, 3, CV_64F, camera_matrix_data );
 }
 

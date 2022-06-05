@@ -23,6 +23,9 @@ namespace rgbd_slam{
 class RGBDFrame{
 
 public:
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+
+public:
 	typedef shared_ptr<RGBDFrame> Ptr;
 	
 	//----------------------------------member variables---------------------------------------------------
